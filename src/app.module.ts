@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'node:path';
+import { AppResolver } from './app.resolver.js';
 
 @Module({
   imports: [
@@ -15,5 +16,6 @@ import { join } from 'node:path';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     }),
   ],
+  providers: [AppResolver],
 })
 export class AppModule {}
