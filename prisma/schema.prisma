@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String @id @default(uuid())
+  email        String @unique
+  name         String
+  passwordHash String @map("password_hash")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  digitalCard DigitalCard?
+
+  @@map("users")
+}
+
+model DigitalCard {
+  id     String @id @default(uuid())
+  userId String @unique @map("user_id")
+
+  slug  String  @unique
+  title String
+  bio   String?
+  phone String?
+  email String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user        User         @relation(fields: [userId], references: [id])
+  socialLinks SocialLink[]
+
+  @@map("digital_cards")
+}
+
+model SocialLink {
+  id     String @id @default(uuid())
+  cardId String @map("card_id")
+
+  platform String
+  url      String
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  card DigitalCard @relation(fields: [cardId], references: [id])
+
+  @@map("social_links")
+}
