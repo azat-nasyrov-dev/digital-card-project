@@ -2,6 +2,65 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""User information."""
+type UserType {
+  """User unique identifier."""
+  id: String!
+
+  """User email address."""
+  email: String!
+
+  """User display name."""
+  name: String!
+
+  """User creation date."""
+  createdAt: DateTime!
+
+  """User last update date."""
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""User authentication response."""
+type LoginResponse {
+  """JWT access token."""
+  accessToken: String!
+
+  """Authenticated user."""
+  user: UserType!
+}
+
 type Query {
   sayHello: String!
+  me: UserType!
+}
+
+type Mutation {
+  register(input: RegisterInput!): UserType!
+  login(input: LoginInput!): LoginResponse!
+}
+
+"""User registration input."""
+input RegisterInput {
+  """User email address."""
+  email: String!
+
+  """User display name."""
+  name: String!
+
+  """User password."""
+  password: String!
+}
+
+"""User login input."""
+input LoginInput {
+  """User email address."""
+  email: String!
+
+  """User password."""
+  password: String!
 }
