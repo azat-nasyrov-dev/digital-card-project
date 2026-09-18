@@ -27,12 +27,26 @@ export class UsersService {
    * @returns Created user
    */
   public async createUser(email: string, name: string, passwordHash: string): Promise<User> {
-    return await this.prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {
         email,
         name,
         passwordHash,
       },
     });
+
+    this.logger.log(`User created [id=${user.id}]`);
+
+    return user;
+  }
+
+  /**
+   * Finds a user by identifier.
+   *
+   * @param id User identifier
+   * @returns Found user or null if the user does not exist
+   */
+  public async findUserById(id: string): Promise<User | null> {
+    return await this.prisma.user.findUnique({ where: { id } });
   }
 }
