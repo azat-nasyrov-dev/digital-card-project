@@ -34,14 +34,49 @@ type LoginResponse {
   user: UserType!
 }
 
+"""Digital business card."""
+type DigitalCardType {
+  """Digital card unique identifier."""
+  id: String!
+
+  """Owner user identifier."""
+  userId: String!
+
+  """Unique public card slug."""
+  slug: String!
+
+  """Card title."""
+  title: String!
+
+  """Short card biography."""
+  bio: String
+
+  """Contact phone number."""
+  phone: String
+
+  """Public contact email."""
+  email: String
+
+  """Card creation date."""
+  createdAt: DateTime!
+
+  """Card last update date."""
+  updatedAt: DateTime!
+}
+
 type Query {
   sayHello: String!
   me: UserType!
+  getMyDigitalCard: DigitalCardType!
+  getDigitalCard(slug: String!): DigitalCardType!
 }
 
 type Mutation {
   register(input: RegisterInput!): UserType!
   login(input: LoginInput!): LoginResponse!
+  createDigitalCard(input: CreateDigitalCardInput!): DigitalCardType!
+  updateDigitalCard(id: String!, input: UpdateDigitalCardInput!): DigitalCardType!
+  deleteDigitalCard(id: String!): Boolean!
 }
 
 """User registration input."""
@@ -63,4 +98,40 @@ input LoginInput {
 
   """User password."""
   password: String!
+}
+
+"""Digital card creation input."""
+input CreateDigitalCardInput {
+  """Unique public card slug."""
+  slug: String!
+
+  """Card title."""
+  title: String!
+
+  """Short card biography."""
+  bio: String
+
+  """Contact phone number."""
+  phone: String
+
+  """Public contact email."""
+  email: String
+}
+
+"""Digital card update input."""
+input UpdateDigitalCardInput {
+  """Unique public card slug."""
+  slug: String
+
+  """Card title."""
+  title: String
+
+  """Short card biography."""
+  bio: String
+
+  """Contact phone number."""
+  phone: String
+
+  """Public contact email."""
+  email: String
 }
