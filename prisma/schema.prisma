@@ -49,7 +49,7 @@ model SocialLink {
 
   createdAt DateTime @default(now()) @map("created_at")
 
-  card DigitalCard @relation(fields: [cardId], references: [id])
+  card DigitalCard @relation(fields: [cardId], references: [id], onDelete: Cascade)
 
   @@map("social_links")
 }
