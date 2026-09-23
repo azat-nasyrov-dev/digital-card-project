@@ -2,8 +2,8 @@ import { ConflictException, Injectable, Logger, NotFoundException } from '@nestj
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateDigitalCardInput } from './dto/create-digital-card.input.js';
 import { UpdateDigitalCardInput } from './dto/update-digital-card.input.js';
-import type { DigitalCard } from '../generated/prisma/client.js';
 import { Prisma } from '../generated/prisma/client.js';
+import type { DigitalCardWithSocialLinksType } from './types/digital-card-with-social-links.type.js';
 
 @Injectable()
 export class DigitalCardsService {
@@ -21,7 +21,7 @@ export class DigitalCardsService {
   public async createDigitalCard(
     userId: string,
     input: CreateDigitalCardInput,
-  ): Promise<DigitalCard> {
+  ): Promise<DigitalCardWithSocialLinksType> {
     const card = await this.prisma.digitalCard.create({
       data: {
         userId,
@@ -31,6 +31,7 @@ export class DigitalCardsService {
         phone: input.phone,
         email: input.email,
       },
+      include: { socialLinks: true },
     });
 
     this.logger.log(`Digital card created [id=${card.id}, userId=${userId}]`);
@@ -39,14 +40,18 @@ export class DigitalCardsService {
   }
 
   /**
-   * Finds the digital card owned by the specified user.
+   * Finds the digital card owned by the specified user with its social links.
    *
    * @param userId Owner user identifier
-   * @returns Digital card owned by the user
+   * @returns Digital card with social links
    * @throws NotFoundException When the user has no digital card
    */
-  public async getMyDigitalCard(userId: string): Promise<DigitalCard> {
-    const card = await this.prisma.digitalCard.findUnique({ where: { userId } });
+  public async getMyDigitalCard(userId: string): Promise<DigitalCardWithSocialLinksType> {
+    const card = await this.prisma.digitalCard.findUnique({
+      where: { userId },
+      include: { socialLinks: true },
+    });
+
     if (!card) {
       throw new NotFoundException('Digital card not found');
     }
@@ -55,14 +60,18 @@ export class DigitalCardsService {
   }
 
   /**
-   * Finds a public digital card by its slug.
+   * Finds a public digital card by its slug with its social links.
    *
    * @param slug Public card slug
-   * @returns Digital card
+   * @returns Digital card with social links
    * @throws NotFoundException When the card does not exist
    */
-  public async getDigitalCard(slug: string): Promise<DigitalCard> {
-    const card = await this.prisma.digitalCard.findUnique({ where: { slug } });
+  public async getDigitalCard(slug: string): Promise<DigitalCardWithSocialLinksType> {
+    const card = await this.prisma.digitalCard.findUnique({
+      where: { slug },
+      include: { socialLinks: true },
+    });
+
     if (!card) {
       throw new NotFoundException('Digital card not found');
     }
@@ -84,7 +93,7 @@ export class DigitalCardsService {
     userId: string,
     cardId: string,
     input: UpdateDigitalCardInput,
-  ): Promise<DigitalCard> {
+  ): Promise<DigitalCardWithSocialLinksType> {
     const card = await this.prisma.digitalCard.findFirst({ where: { id: cardId, userId } });
     if (!card) {
       throw new NotFoundException('Digital card not found');
@@ -94,6 +103,7 @@ export class DigitalCardsService {
       const updatedCard = await this.prisma.digitalCard.update({
         where: { id: card.id },
         data: input,
+        include: { socialLinks: true },
       });
 
       this.logger.log(`Digital card updated [id=${card.id}, userId=${userId}]`);
@@ -123,6 +133,6 @@ export class DigitalCardsService {
 
     await this.prisma.digitalCard.delete({ where: { id: card.id } });
 
-    this.logger.log(`Digital card deleted [id=${cardId}, userId=${userId}]`);
+    this.logger.log(`Digital card deleted [id=${card.id}, userId=${userId}]`);
   }
 }

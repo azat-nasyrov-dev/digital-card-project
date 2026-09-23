@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { SocialLinkType } from '../../social-links/dto/social-link.type.js';
 
 @ObjectType({ description: 'Digital business card.' })
 export class DigitalCardType {
@@ -22,6 +23,11 @@ export class DigitalCardType {
 
   @Field(() => String, { nullable: true, description: 'Public contact email.' })
   readonly email!: string | null;
+
+  @Field(() => [SocialLinkType], {
+    description: 'Social media links associated with the card.',
+  })
+  readonly socialLinks!: SocialLinkType[];
 
   @Field(() => Date, { description: 'Card creation date.' })
   readonly createdAt!: Date;
