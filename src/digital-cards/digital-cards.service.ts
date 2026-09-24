@@ -4,6 +4,7 @@ import { CreateDigitalCardInput } from './dto/create-digital-card.input.js';
 import { UpdateDigitalCardInput } from './dto/update-digital-card.input.js';
 import { Prisma } from '../generated/prisma/client.js';
 import type { DigitalCardWithSocialLinksType } from './types/digital-card-with-social-links.type.js';
+import type { PrismaDriverAdapterUniqueConstraintMetaType } from './types/prisma-driver-adapter-unique-constraint-meta.type.js';
 
 @Injectable()
 export class DigitalCardsService {
@@ -14,29 +15,52 @@ export class DigitalCardsService {
   /**
    * Creates a digital card for the specified user.
    *
+   * The created card includes its social links, which are empty for a newly created card.
+   *
    * @param userId Owner user identifier
    * @param input Digital card creation input
-   * @returns Created digital card
+   * @returns Created digital card with its social links
+   * @throws ConflictException When the slug is already in use or the user already has a digital card
    */
   public async createDigitalCard(
     userId: string,
     input: CreateDigitalCardInput,
   ): Promise<DigitalCardWithSocialLinksType> {
-    const card = await this.prisma.digitalCard.create({
-      data: {
-        userId,
-        slug: input.slug,
-        title: input.title,
-        bio: input.bio,
-        phone: input.phone,
-        email: input.email,
-      },
-      include: { socialLinks: true },
-    });
+    try {
+      const card = await this.prisma.digitalCard.create({
+        data: {
+          userId,
+          slug: input.slug,
+          title: input.title,
+          bio: input.bio,
+          phone: input.phone,
+          email: input.email,
+        },
+        include: { socialLinks: true },
+      });
 
-    this.logger.log(`Digital card created [id=${card.id}, userId=${userId}]`);
+      this.logger.log(`Digital card created [id=${card.id}, userId=${userId}]`);
 
-    return card;
+      return card;
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+        console.dir(err.meta, { depth: null });
+        const meta = err.meta as PrismaDriverAdapterUniqueConstraintMetaType | undefined;
+        const constraintIndex = meta?.driverAdapterError?.cause?.constraint?.index;
+
+        if (constraintIndex === 'digital_cards_user_id_key') {
+          throw new ConflictException('User already has a digital card');
+        }
+
+        if (constraintIndex === 'digital_cards_slug_key') {
+          throw new ConflictException('Slug already exists');
+        }
+
+        throw new ConflictException('Digital card already exists');
+      }
+
+      throw err;
+    }
   }
 
   /**
@@ -82,10 +106,12 @@ export class DigitalCardsService {
   /**
    * Updates a digital card owned by the specified user.
    *
+   * Only fields provided in the input are updated. The returned card includes its social links.
+   *
    * @param userId Owner user identifier
    * @param cardId Digital card identifier
-   * @param input Digital card update input
-   * @returns Updated digital card
+   * @param input Partial digital card update input
+   * @returns Updated digital card with its social links
    * @throws NotFoundException When the card does not exist or does not belong to the user
    * @throws ConflictException When the specified slug is already in use
    */
@@ -120,6 +146,8 @@ export class DigitalCardsService {
 
   /**
    * Deletes a digital card owned by the specified user.
+   *
+   * Deleting the card also removes all associated social links through the database cascade delete constraint.
    *
    * @param userId Owner user identifier
    * @param cardId Digital card identifier
