@@ -44,7 +44,6 @@ export class DigitalCardsService {
       return card;
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
-        console.dir(err.meta, { depth: null });
         const meta = err.meta as PrismaDriverAdapterUniqueConstraintMetaType | undefined;
         const constraintIndex = meta?.driverAdapterError?.cause?.constraint?.index;
 
