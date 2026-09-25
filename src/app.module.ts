@@ -21,7 +21,7 @@ import { SocialLinksModule } from './social-links/social-links.module.js';
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      autoSchemaFile: join(process.cwd(), 'dist/schema.gql'),
       context: ({ req }: { req: Request }) => ({ req }),
     }),
     PrismaModule,
