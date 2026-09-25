@@ -5,7 +5,7 @@ import { CreateDigitalCardInput } from './dto/create-digital-card.input.js';
 import { UpdateDigitalCardInput } from './dto/update-digital-card.input.js';
 import { DigitalCardType } from './dto/digital-card.type.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
-import { AuthenticatedRequest } from '../auth/types/authenticated-request.js';
+import { AuthenticatedRequest } from '../types/authenticated-request.js';
 
 @Resolver(() => DigitalCardType)
 export class DigitalCardsResolver {

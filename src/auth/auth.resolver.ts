@@ -7,7 +7,7 @@ import { LoginResponse } from './dto/login.response.js';
 import { LoginInput } from './dto/login.input.js';
 import type { User } from '../generated/prisma/client.js';
 import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
-import { AuthenticatedRequest } from './types/authenticated-request.js';
+import { AuthenticatedRequest } from '../types/authenticated-request.js';
 
 @Resolver()
 export class AuthResolver {

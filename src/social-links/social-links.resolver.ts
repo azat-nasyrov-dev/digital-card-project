@@ -5,7 +5,7 @@ import { AddSocialLinkInput } from './dto/add-social-link.input.js';
 import { UpdateSocialLinkInput } from './dto/update-social-link.input.js';
 import { SocialLinkType } from './dto/social-link.type.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
-import { AuthenticatedRequest } from '../auth/types/authenticated-request.js';
+import { AuthenticatedRequest } from '../types/authenticated-request.js';
 
 @Resolver(() => SocialLinkType)
 export class SocialLinksResolver {
