@@ -10,6 +10,7 @@ import { PrismaModule } from './prisma/prisma.module.js';
 import { UsersModule } from './users/users.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { DigitalCardsModule } from './digital-cards/digital-cards.module.js';
+import { SocialLinksModule } from './social-links/social-links.module.js';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { DigitalCardsModule } from './digital-cards/digital-cards.module.js';
     UsersModule,
     AuthModule,
     DigitalCardsModule,
+    SocialLinksModule,
   ],
   providers: [AppResolver],
 })
