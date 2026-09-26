@@ -1,114 +1,237 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# Digital Card App
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Digital Card App is a back-end application for creating and managing digital business cards.
 
-## Project setup
+The application is built with **Node.js**, **TypeScript**, **NestJS**, **PostgreSQL**, **Prisma**, and **GraphQL**.
 
-```bash
-$ npm install
+## Technologies
+
+- **Node.js**: JavaScript runtime for building server-side applications.
+- **TypeScript**: Typed programming language used for the application source code.
+- **NestJS**: Framework for building scalable Node.js server-side applications.
+- **PostgreSQL**: Relational database management system.
+- **Prisma**: ORM for database schema management, migrations, and database interaction.
+- **GraphQL**: API query language and runtime.
+- **Docker**: Container platform used to run the application.
+- **Docker Compose**: Tool for defining and running the application and PostgreSQL database together.
+
+## Features
+
+- User registration and JWT authentication.
+- Authenticated user information.
+- Public digital card lookup by slug.
+- Protected digital card management.
+- Social link management.
+- Ownership validation for protected operations.
+- Input validation with class-validator.
+- GraphQL API error handling.
+- Prisma database migrations.
+- Dockerized application and PostgreSQL database.
+
+## Project Structure
+
+```text
+src/
+├── auth/
+├── users/
+├── digital-cards/
+├── social-links/
+├── prisma/
+└── types/
+
+prisma/
+└── migrations/
+
+requests/
+└── graphql-requests.http
 ```
 
-## Compile and run the project
+## Installation
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
+cd digital-card-project
+```
+
+Install dependencies:
 
 ```bash
 # development
-$ npm run start
+$ npm ci
+```
 
-# watch mode
+Generate Prisma Client:
+
+```bash
+$ npx prisma generate
+```
+
+## Environment
+
+Create a local environment file:
+
+```bash
+$ cp .env.example .env
+```
+
+Fill in the required environment variables in `.env`.
+
+Example:
+
+```env
+# APP
+PORT=3001
+
+# DB
+DATABASE_URL="postgresql://postgres:password@localhost:5432/digital_card_project"
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=password
+POSTGRES_DB=digital_card_project
+
+# JWT
+JWT_TOKEN_SECRET=your-secret
+JWT_TOKEN_ISSUER=digital-card-api
+JWT_TOKEN_AUDIENCE=digital-card-client
+JWT_ACCESS_TOKEN_TTL=3600
+```
+
+## Running the app
+
+Run the application in development mode:
+
+```bash
+# development
 $ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
-## Run tests
+The GraphQL API is available at:
+
+```text
+http://localhost:3001/graphql
+```
+
+## Database migrations
+
+Apply existing Prisma migrations:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+$ npx prisma migrate deploy
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Create a new migration during development:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+$ npx prisma migrate dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Generate Prisma Client after schema changes:
 
-## Observability
+```bash
+$ npx prisma generate
+```
 
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
+## Build
 
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
+Build the application:
 
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
+```bash
+$ npm run build
+```
 
-## Resources
+## Build and start Docker containers
 
-Check out a few resources that may come in handy when working with NestJS:
+Build and start the application and PostgreSQL containers:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observer](https://observer.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+$ docker compose up --build
+```
 
-## Support
+The Docker setup starts:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- NestJS application;
+- PostgreSQL database.
 
-## Stay in touch
+Prisma migrations are applied automatically when the application container starts.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+The GraphQL API is available at:
 
-## License
+```text
+http://localhost:3001/graphql
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Stop the containers:
+
+```bash
+$ docker compose down
+```
+
+PostgreSQL data is stored in the `db_data` Docker volume and persists between container restarts.
+
+## Testing GraphQL Endpoints with HTTP Client
+
+A `graphql-requests.http` file is included in the `requests` directory with ready-to-use GraphQL requests.
+
+The file uses the JetBrains HTTP Client `GRAPHQL` request syntax and is compatible with WebStorm, IntelliJ IDEA, and other JetBrains IDEs that support HTTP Client requests.
+
+The requests demonstrate:
+
+- GraphQL queries and mutations;
+- GraphQL variables;
+- JWT authorization;
+- digital card operations;
+- social link operations.
+
+### How to use
+
+1. Open the `requests/graphql-requests.http` file.
+2. Start the application locally or using Docker.
+3. Set the `accessToken`, `cardId`, and `socialLinkId` variables where required.
+4. Run the required request directly from the IDE.
+
+Protected operations require a valid JWT in the `Authorization` header.
+
+## Testing with Postman
+
+The same GraphQL operations can be used in Postman.
+
+Use:
+
+```text
+Method: POST
+URL: http://localhost:3001/graphql
+```
+
+For the request headers:
+
+```text
+Content-Type: application/json
+Authorization: Bearer <JWT>
+```
+
+The GraphQL request can be copied from the `requests/graphql-requests.http` file.
+
+## GraphQL Operations
+
+### Authentication
+
+- `register`
+- `login`
+- `me`
+
+### Digital Cards
+
+- `createDigitalCard`
+- `getMyDigitalCard`
+- `getDigitalCard`
+- `updateDigitalCard`
+- `deleteDigitalCard`
+
+### Social Links
+
+- `addSocialLink`
+- `updateSocialLink`
+- `deleteSocialLink`
