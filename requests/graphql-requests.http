@@ -1,0 +1,266 @@
+### GraphQL API requests
+# Endpoint: http://localhost:3001/graphql
+
+@baseUrl = http://localhost:3001/graphql
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjE4ODA3YS1hODA4LTRiNjctODhhOS05YmMyNmJkZTlkYjAiLCJlbWFpbCI6ImpvaG4uZG9lQGdtYWlsLmNvbSIsImlhdCI6MTc5MDQyNjkxMSwiZXhwIjoxNzkwNDMwNTExLCJhdWQiOiJkaWdpdGFsLWNhcmQtY2xpZW50IiwiaXNzIjoiZGlnaXRhbC1jYXJkLWFwaSJ9.vB7a8_DBhTjUiZym1SSKRVpiL6HBdpj-M4DzSUjPH5c
+@cardId = YOUR_CARD_ID
+@socialLinkId = YOUR_SOCIAL_LINK_ID
+
+### Register
+GRAPHQL {{baseUrl}}
+
+mutation Register($input: RegisterInput!) {
+    register(input: $input) {
+        id
+        email
+        name
+        createdAt
+        updatedAt
+    }
+}
+
+{
+  "input" : {
+    "email": "test@example.com",
+    "name": "Test User",
+    "password": "password123"
+  }
+}
+
+### Login
+GRAPHQL {{baseUrl}}
+
+mutation Login($input: LoginInput!) {
+    login(input: $input) {
+        accessToken
+        user {
+            id
+            email
+            name
+        }
+    }
+}
+
+{
+  "input": {
+    "email": "john.doe@gmail.com",
+    "password": "pass12345"
+  }
+}
+
+### Me
+GRAPHQL {{baseUrl}}
+Authorization: Bearer {{accessToken}}
+
+query Me {
+    me {
+        id
+        email
+        name
+        createdAt
+        updatedAt
+    }
+}
+
+### Create digital card
+GRAPHQL {{baseUrl}}
+Authorization: Bearer {{accessToken}}
+
+mutation CreateDigitalCard($input: CreateDigitalCardInput!) {
+    createDigitalCard(input: $input) {
+        id
+        userId
+        slug
+        title
+        bio
+        phone
+        email
+        socialLinks {
+            id
+            cardId
+            platform
+            url
+            createdAt
+        }
+        createdAt
+        updatedAt
+    }
+}
+
+{
+  "input": {
+    "slug": "my-card",
+    "title": "Software Engineer",
+    "bio": "My digital business card",
+    "phone": "+123456789",
+    "email": "test@example.com"
+  }
+}
+
+### Get my digital card
+GRAPHQL {{baseUrl}}
+Authorization: Bearer {{accessToken}}
+
+query GetMyDigitalCard {
+    getMyDigitalCard {
+        id
+        userId
+        slug
+        title
+        bio
+        phone
+        email
+        socialLinks {
+            id
+            cardId
+            platform
+            url
+            createdAt
+        }
+        createdAt
+        updatedAt
+    }
+}
+
+### Get public digital card
+GRAPHQL {{baseUrl}}
+
+query GetDigitalCard($slug: String!) {
+    getDigitalCard(slug: $slug) {
+        id
+        userId
+        slug
+        title
+        bio
+        phone
+        email
+        socialLinks {
+            id
+            cardId
+            platform
+            url
+            createdAt
+        }
+        createdAt
+        updatedAt
+    }
+}
+
+### Update digital card
+GRAPHQL {{baseUrl}}
+Authorization: Bearer {{accessToken}}
+
+mutation UpdateDigitalCard(
+    $id: String!
+    $input: UpdateDigitalCardInput!
+) {
+    updateDigitalCard(
+        id: $id
+        input: $input
+    ) {
+        id
+        userId
+        slug
+        title
+        bio
+        phone
+        email
+        socialLinks {
+            id
+            cardId
+            platform
+            url
+            createdAt
+        }
+        createdAt
+        updatedAt
+    }
+}
+
+{
+  "id": "{{cardId}}",
+  "input": {
+    "title": "Updated title",
+    "bio": "Updated biography"
+  }
+}
+
+### Delete digital card
+GRAPHQL {{baseUrl}}
+Authorization: Bearer {{accessToken}}
+
+mutation DeleteDigitalCard($id: String!) {
+    deleteDigitalCard(id: $id)
+}
+
+{
+  "id": "{{cardId}}"
+}
+
+### Add social link
+GRAPHQL {{baseUrl}}
+Authorization: Bearer {{accessToken}}
+
+mutation AddSocialLink(
+    $cardId: String!
+    $input: AddSocialLinkInput!
+) {
+    addSocialLink(
+        cardId: $cardId
+        input: $input
+    ) {
+        id
+        cardId
+        platform
+        url
+        createdAt
+    }
+}
+
+{
+  "cardId": "{{cardId}}",
+  "input": {
+    "platform": "github",
+    "url": "https://github.com/example"
+  }
+}
+
+### Update social link
+GRAPHQL {{baseUrl}}
+Authorization: Bearer {{accessToken}}
+
+mutation UpdateSocialLink(
+    $id: String!
+    $input: UpdateSocialLinkInput!
+) {
+    updateSocialLink(
+        id: $id
+        input: $input
+    ) {
+        id
+        cardId
+        platform
+        url
+        createdAt
+    }
+}
+
+{
+  "id": "{{socialLinkId}}",
+  "input": {
+    "platform": "telegram",
+    "url": "https://t.me/example"
+  }
+}
+
+### Delete social link
+GRAPHQL {{baseUrl}}
+Authorization: Bearer {{accessToken}}
+
+mutation DeleteSocialLink($id: String!) {
+    deleteSocialLink(id: $id)
+}
+
+{
+  "id": "{{socialLinkId}}"
+}
